@@ -45,7 +45,7 @@ Welcome to your **LDS Gospel Study Archive**! This is a modern, premium static w
 
 ## Technical Pipeline
 
-The application processes your raw study data in three stages using `uv`, a blazingly fast Python package manager:
+The application processes your raw study data in three stages using `uv`, a super fast Python package manager:
 
 1. **Journal Parsing**: Reads exported RTF files from Google Docs, parses their internal style directives (`\s1` for date, `\s2` for title, `\s16` for metadata/references, `\s0` for body), and extracts structured article components.
 2. **Scripture Parsing**: Converts raw scriptures text files into structured chapter/verse JSON objects grouped by volume to enable fast, modular loading.
