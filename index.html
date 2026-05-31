@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LDS Gospel Study Archive & Scriptures Index</title>
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN for Scripture Visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-book-open-reader"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Gospel Study</h1>
+                    <span>Journal Archive</span>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <li class="nav-item active" id="nav-dashboard">
+                    <a href="#" onclick="switchTab('dashboard')">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item" id="nav-articles">
+                    <a href="#" onclick="switchTab('articles')">
+                        <i class="fa-solid fa-file-invoice"></i>
+                        <span>Browse Journal</span>
+                    </a>
+                </li>
+                <li class="nav-item" id="nav-scriptures">
+                    <a href="scriptures.html">
+                        <i class="fa-solid fa-book-bible"></i>
+                        <span>Scripture Reader</span>
+                    </a>
+                </li>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button class="theme-toggle-btn" onclick="toggleTheme()">
+                    <span>Appearance</span>
+                    <i class="fa-solid fa-moon" id="theme-icon"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- DASHBOARD VIEW -->
+            <div id="view-dashboard" class="tab-view fade-in">
+                <div class="glass-panel">
+                    <h1 class="page-title">Study Dashboard</h1>
+                    <p class="page-subtitle">Visualizing study patterns, subjects, and scriptural references over time.</p>
+                    
+                    <!-- Metrics Cards Grid -->
+                    <div class="dashboard-grid">
+                        <div class="glass-panel metric-card">
+                            <div class="metric-icon">
+                                <i class="fa-solid fa-book"></i>
+                            </div>
+                            <div class="metric-info">
+                                <h3>Total Articles</h3>
+                                <div class="metric-value" id="stat-articles">-</div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-panel metric-card">
+                            <div class="metric-icon">
+                                <i class="fa-solid fa-link"></i>
+                            </div>
+                            <div class="metric-info">
+                                <h3>Cross-Referenced</h3>
+                                <div class="metric-value" id="stat-crossrefs">-</div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-panel metric-card">
+                            <div class="metric-icon">
+                                <i class="fa-solid fa-tags"></i>
+                            </div>
+                            <div class="metric-info">
+                                <h3>Unique Tags</h3>
+                                <div class="metric-value" id="stat-tags">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visualizations Row -->
+                <div class="charts-grid">
+                    <div class="glass-panel">
+                        <h2>Scriptures Volume Reference Counts</h2>
+                        <div class="chart-container">
+                            <canvas id="volumesChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="glass-panel">
+                        <h2>Top Referenced Books</h2>
+                        <div class="chart-container">
+                            <canvas id="booksChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent & Tag Cloud Layout -->
+                <div class="charts-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="glass-panel">
+                        <h2>Popular Subjects & Tags</h2>
+                        <div class="tag-cloud" id="dashboard-tag-cloud">
+                            <!-- Tags populated dynamically -->
+                        </div>
+                    </div>
+                    <div class="glass-panel">
+                        <h2>Recent Journal Entries</h2>
+                        <div class="articles-list" id="dashboard-recent-entries" style="gap: 1rem;">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BROWSE JOURNAL VIEW -->
+            <div id="view-articles" class="tab-view fade-in" style="display: none;">
+                <div class="glass-panel">
+                    <h1 class="page-title">Journal Archive</h1>
+                    <p class="page-subtitle">Search, filter, and read through your custom gospel study entries.</p>
+                    
+                    <!-- Search & Filter Controls -->
+                    <div class="search-filter-section">
+                        <div class="search-input-wrapper">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="article-search" class="search-input" placeholder="Search keywords, titles, tags, or scripture verses..." oninput="handleSearch()">
+                        </div>
+                        
+                        <select id="filter-volume" class="filter-select" onchange="handleFilters()">
+                            <option value="">All Scripture Volumes</option>
+                            <option value="Old Testament">Old Testament</option>
+                            <option value="New Testament">New Testament</option>
+                            <option value="Book of Mormon">Book of Mormon</option>
+                            <option value="Doctrine and Covenants">Doctrine & Covenants</option>
+                            <option value="Pearl of Great Price">Pearl of Great Price</option>
+                        </select>
+                    </div>
+
+                    <!-- Selected Tag Indicator -->
+                    <div id="active-tag-indicator" style="display: none; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <span style="font-size: 0.9rem; color: var(--text-secondary);">Filtering by Tag:</span>
+                        <span id="active-tag-badge" class="tag-pill active">Tag</span>
+                        <button onclick="clearTagFilter()" style="background: none; border: none; color: var(--accent); cursor: pointer; font-size: 0.9rem;"><i class="fa-solid fa-xmark"></i> Clear</button>
+                    </div>
+
+                    <!-- Articles Grid -->
+                    <div class="articles-list" id="articles-container">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Article Reader Modal Overlay -->
+    <div class="modal-overlay" id="article-modal" onclick="closeArticleModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close-btn" onclick="toggleArticleModal(false)">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-header-panel">
+                <div class="article-meta">
+                    <span id="modal-article-date">Date</span>
+                </div>
+                <h2 class="article-title-link" id="modal-article-title" style="font-size: 1.8rem; margin-top: 0.5rem; margin-bottom: 0.75rem;">Title</h2>
+                <div class="tag-cloud" id="modal-article-tags"></div>
+            </div>
+            <div class="modal-body-panel" id="modal-article-body">
+                <!-- Body populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Controller Logic Script -->
+    <script src="js/app.js"></script>
+</body>
+</html>

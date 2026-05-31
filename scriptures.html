@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LDS Scriptures Reader & Study Footnotes</title>
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-book-open-reader"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Gospel Study</h1>
+                    <span>Journal Archive</span>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <li class="nav-item" id="nav-dashboard">
+                    <a href="index.html">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item" id="nav-articles">
+                    <a href="index.html?tab=articles">
+                        <i class="fa-solid fa-file-invoice"></i>
+                        <span>Browse Journal</span>
+                    </a>
+                </li>
+                <li class="nav-item active" id="nav-scriptures">
+                    <a href="#">
+                        <i class="fa-solid fa-book-bible"></i>
+                        <span>Scripture Reader</span>
+                    </a>
+                </li>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button class="theme-toggle-btn" onclick="toggleTheme()">
+                    <span>Appearance</span>
+                    <i class="fa-solid fa-moon" id="theme-icon"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="glass-panel">
+                <h1 class="page-title">Scripture Reader</h1>
+                <p class="page-subtitle">Read standard works and view glowing cross-reference highlights mapping to your journal entries.</p>
+                
+                <!-- Canon Navigation selectors -->
+                <div class="scripture-selector-row">
+                    <select id="select-volume" class="filter-select" onchange="onVolumeChange()">
+                        <option value="">Select Volume...</option>
+                        <option value="Old Testament">Old Testament</option>
+                        <option value="New Testament">New Testament</option>
+                        <option value="Book of Mormon">Book of Mormon</option>
+                        <option value="Doctrine and Covenants">Doctrine & Covenants</option>
+                        <option value="Pearl of Great Price">Pearl of Great Price</option>
+                    </select>
+                    
+                    <select id="select-book" class="filter-select" onchange="onBookChange()" disabled>
+                        <option value="">Select Book...</option>
+                    </select>
+                    
+                    <select id="select-chapter" class="filter-select" onchange="onChapterChange()" disabled>
+                        <option value="">Select Chapter...</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Scripture Text Panel -->
+            <div class="glass-panel" id="scripture-text-panel" style="display: none;">
+                <h2 id="chapter-title" style="font-size: 1.8rem; margin-bottom: 2rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.75rem;">Chapter Title</h2>
+                
+                <div class="scripture-reader-text" id="verses-container">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+            
+            <!-- Instructions when no volume is selected -->
+            <div class="glass-panel" id="reader-instruction" style="text-align: center; padding: 4rem 2rem;">
+                <i class="fa-solid fa-book-bible" style="font-size: 4rem; color: var(--accent); opacity: 0.3; margin-bottom: 1.5rem; display: block;"></i>
+                <h2>Select a Scripture Chapter</h2>
+                <p style="color: var(--text-secondary); max-width: 500px; margin: 0.5rem auto 0 auto;">Choose a volume, book, and chapter from the controls above to start reading. Cross-referenced verses will automatically glow in purple.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footnotes Sliding Drawer Panel (from right) -->
+    <div class="footnote-drawer" id="footnote-drawer">
+        <div class="footnote-header">
+            <h2 id="drawer-verse-title" style="font-size: 1.25rem; margin-bottom: 0;">Verse Footnotes</h2>
+            <button class="footnote-close-btn" onclick="toggleFootnoteDrawer(false)">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="footnote-body" id="drawer-footnotes-container">
+            <!-- Loaded dynamically -->
+        </div>
+    </div>
+
+    <!-- Article Reader Modal Overlay (Allows reading full article from within scripture reader page!) -->
+    <div class="modal-overlay" id="article-modal" onclick="closeArticleModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close-btn" onclick="toggleArticleModal(false)">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-header-panel">
+                <div class="article-meta">
+                    <span id="modal-article-date">Date</span>
+                </div>
+                <h2 class="article-title-link" id="modal-article-title" style="font-size: 1.8rem; margin-top: 0.5rem; margin-bottom: 0.75rem;">Title</h2>
+                <div class="tag-cloud" id="modal-article-tags"></div>
+            </div>
+            <div class="modal-body-panel" id="modal-article-body">
+                <!-- Body populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scriptures Reader Controller Script -->
+    <script src="js/reader.js"></script>
+</body>
+</html>
